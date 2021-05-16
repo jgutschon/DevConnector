@@ -1,3 +1,4 @@
 {
-    "mongoURI": "mongodb+srv://jon:Password@devconnector.0ymll.mongodb.net/<dbname>?retryWrites=true&w=majority"
+  "mongoURI": "mongodb+srv://jon:Password@devconnector.0ymll.mongodb.net/<dbname>?retryWrites=true&w=majority",
+  "jwtToken": "secrettoken"
 }
