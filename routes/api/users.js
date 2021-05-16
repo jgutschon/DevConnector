@@ -8,7 +8,9 @@ const { check, validationResult } = require('express-validator/check');
 
 const User = require('../../models/User');
 
-// register user
+// @route   POST api/users
+// @desc    Register user
+// @access  Public
 router.post(
   '/',
   [
@@ -69,9 +71,6 @@ router.post(
           res.json({ token });
         }
       );
-
-      // Return JWT
-      // res.send('User registered');
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
