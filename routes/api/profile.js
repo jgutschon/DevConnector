@@ -29,6 +29,42 @@ router.get('/me', auth, async (req, res) => {
   }
 });
 
+// @route   GET api/profile
+// @desc    Get all profiles
+// @access  Public
+router.get('/', async (req, res) => {
+  try {
+    const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+    res.json(profiles);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   GET api/profile/user/:user_id
+// @desc    Get profile by user id
+// @access  Public
+router.get('/user/:user_id', async (req, res) => {
+  try {
+    const profile = await Profile.findOne({
+      user: req.params.user_id,
+    }).populate('user', ['name', 'avatar']);
+
+    if (!profile) {
+      return res.status(400).json({ msg: 'Profile not found' });
+    }
+
+    res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind == 'ObjectId') {
+      return res.status(400).json({ msg: 'Profile not found' });
+    }
+    res.status(500).send('Server error');
+  }
+});
+
 // @route   POST api/profile
 // @desc    Create or update a user profile
 // @access  Private
@@ -110,38 +146,18 @@ router.post(
   }
 );
 
-// @route   GET api/profile
-// @desc    Get all profiles
-// @access  Public
-router.get('/', async (req, res) => {
+// @route   DELETE api/profile
+// @desc    Delete profile and user
+// @access  Private
+router.delete('/', auth, async (req, res) => {
   try {
-    const profiles = await Profile.find().populate('user', ['name', 'avatar']);
-    res.json(profiles);
+    // @todo - remove users posts
+    // remove profile
+    await Profile.findOneAndRemove({ user: req.user.id });
+    await User.findOneAndRemove({ _id: req.user.id });
+    res.json({ msg: 'User successfully removed' });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server error');
-  }
-});
-
-// @route   GET api/profile/user/:user_id
-// @desc    Get profile by user id
-// @access  Public
-router.get('/user/:user_id', async (req, res) => {
-  try {
-    const profile = await Profile.findOne({
-      user: req.params.user_id,
-    }).populate('user', ['name', 'avatar']);
-
-    if (!profile) {
-      return res.status(400).json({ msg: 'Profile not found' });
-    }
-
-    res.json(profile);
-  } catch (err) {
-    console.error(err.message);
-    if (err.kind == 'ObjectId') {
-      return res.status(400).json({ msg: 'Profile not found' });
-    }
     res.status(500).send('Server error');
   }
 });
