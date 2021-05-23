@@ -70,7 +70,8 @@ router.post(
     if (location) profileFields.location = location;
     if (status) profileFields.status = status;
     if (skills) {
-      profileFields.skills = skills.split(',').map((skill) => skill.trim());
+      let skillsArr = skills.split(',').map((skill) => skill.trim());
+      profileFields.skills = skillsArr.filter(Boolean);
     }
     if (bio) profileFields.bio = bio;
     if (github) profileFields.github = github;
@@ -108,5 +109,18 @@ router.post(
     }
   }
 );
+
+// @route   GET api/profile
+// @desc    Get all profiles
+// @access  Public
+router.get('/', async (req, res) => {
+  try {
+    const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+    res.json(profiles);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
 
 module.exports = router;
