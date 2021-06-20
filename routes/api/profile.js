@@ -5,7 +5,6 @@ const { check, validationResult } = require('express-validator');
 
 const Profile = require('../../models/Profiles');
 const User = require('../../models/User');
-const { formatWithCursor } = require('prettier');
 
 // @route   GET api/profile/me
 // @desc    Get current user profile
@@ -82,6 +81,12 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+
+    // Check if user exists
+    // let userExists = await User.exists({ _id: req.user.id });
+    // if (!userExists) {
+    //   return res.status(401).json({ msg: 'Token is not valid' });
+    // }
 
     const {
       company,
@@ -161,5 +166,56 @@ router.delete('/', auth, async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
+// @route   PUT api/profile/experience
+// @desc    Add profile experience
+// @access  Private
+router.put(
+  '/experience',
+  [
+    auth,
+    [
+      check('title', 'Title is required').not().isEmpty(),
+      check('company', 'Company is required').not().isEmpty(),
+      check('start', 'Start date is required').not().isEmpty(),
+    ],
+  ],
+  async (req, res) => {
+    const errors = validationResult(res);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const {
+      company,
+      title,
+      location,
+      start,
+      finish,
+      current,
+      description,
+    } = req.body;
+
+    const newExperience = {
+      company,
+      title,
+      location,
+      start,
+      finish,
+      current,
+      description,
+    };
+
+    try {
+      const profile = await Profile.findOne({ user: req.user.id });
+      profile.experience.unshift(newExperience);
+      await profile.save();
+      res.json(profile);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server error');
+    }
+  }
+);
 
 module.exports = router;
