@@ -82,12 +82,6 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    // Check if user exists
-    // let userExists = await User.exists({ _id: req.user.id });
-    // if (!userExists) {
-    //   return res.status(401).json({ msg: 'Token is not valid' });
-    // }
-
     const {
       company,
       website,
