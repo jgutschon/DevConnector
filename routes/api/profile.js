@@ -249,6 +249,7 @@ router.put(
     [
       check('school', 'School is required').not().isEmpty(),
       check('degree', 'Degree is required').not().isEmpty(),
+      check('fieldOfStudy', 'Field of study is required').not().isEmpty(),
       check('start', 'Start date is required').not().isEmpty(),
     ],
   ],
