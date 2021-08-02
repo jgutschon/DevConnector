@@ -7,6 +7,32 @@ const Post = require('../../models/Post');
 const User = require('../../models/User');
 const Profile = require('../../models/Profile');
 
+// @route   GET api/posts
+// @desc    Get all posts
+// @access  Private
+router.get('/', auth, async (req, res) => {
+  try {
+    const posts = await Post.find().sort({ date: -1 });
+    res.json(posts);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
+// @route   GET api/posts/:post_id
+// @desc    Get post by id
+// @access  Private
+router.get('/:post_id', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.post_id);
+    res.json(post);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
+
 // @route   POST api/posts
 // @desc    Create a post
 // @access  Private
