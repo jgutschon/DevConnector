@@ -127,7 +127,6 @@ router.put('/like/:post_id', auth, async (req, res) => {
     }
 
     post.likes.unshift({ user: req.user.id });
-
     await post.save();
 
     res.json(post.likes);
@@ -157,8 +156,8 @@ router.put('/unlike/:post_id', auth, async (req, res) => {
     const likeIndex = post.likes
       .map((like) => like.user.toString())
       .indexOf(req.user.id);
-    post.likes.splice(likeIndex, 1);
 
+    post.likes.splice(likeIndex, 1);
     await post.save();
 
     res.json(post.likes);
@@ -192,7 +191,6 @@ router.post(
       };
 
       post.comments.unshift(newComment);
-
       await post.save();
 
       res.json(post.comments);
@@ -202,5 +200,39 @@ router.post(
     }
   }
 );
+
+// @route   DELETE api/posts/comment/:post_id/:comment_id
+// @desc    Delete a comment
+// @access  Private
+router.delete('/comment/:post_id/:comment_id', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.post_id);
+
+    const comment = post.comments.find(
+      (comment) => comment.id === req.params.comment_id
+    );
+
+    if (!comment) {
+      return res.status(404).json({ msg: 'Comment does not exist' });
+    }
+
+    // check if comment_id is from user
+    if (comment.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'Unauthorized' });
+    }
+
+    commentIndex = post.comments
+      .map((comment) => comment.user.toString())
+      .indexOf(comment);
+
+    post.comments.splice(commentIndex, 1);
+    await post.save;
+
+    res.json(post.comments);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+});
 
 module.exports = router;
