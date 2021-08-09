@@ -223,10 +223,10 @@ router.delete('/comment/:post_id/:comment_id', auth, async (req, res) => {
 
     commentIndex = post.comments
       .map((comment) => comment.user.toString())
-      .indexOf(comment);
+      .indexOf(req.user.id);
 
     post.comments.splice(commentIndex, 1);
-    await post.save;
+    await post.save();
 
     res.json(post.comments);
   } catch (err) {
