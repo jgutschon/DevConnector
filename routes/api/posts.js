@@ -5,7 +5,6 @@ const { check, validationResult } = require('express-validator');
 const auth = require('../../middleware/auth');
 const Post = require('../../models/Post');
 const User = require('../../models/User');
-const Profile = require('../../models/Profile');
 
 // @route   GET api/posts
 // @desc    Get all posts
