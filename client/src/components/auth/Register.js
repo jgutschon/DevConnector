@@ -10,8 +10,18 @@ const Register = () => {
   });
 
   const { name, email, password, password2 } = formData;
-  const onChange = (field) =>
-    setFormData({ ...formData, [field.target.name]: field.target.value });
+
+  const onChange = (event) =>
+    setFormData({ ...formData, [event.target.name]: event.target.value });
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+    if (password !== password2) {
+      console.log('Passwords do not match.');
+    } else {
+      console.log(formData);
+    }
+  };
 
   return (
     <Fragment>
@@ -19,14 +29,14 @@ const Register = () => {
       <p className="lead">
         <i className="fas fa-user"></i> Create Your Account
       </p>
-      <form className="form" action="create-profile.html">
+      <form className="form" onSubmit={(event) => onSubmit(event)}>
         <div className="form-group">
           <input
             type="text"
             placeholder="Name"
             name="name"
             value={name}
-            onChange={(field) => onChange(field)}
+            onChange={(event) => onChange(event)}
             required
           />
         </div>
@@ -36,7 +46,7 @@ const Register = () => {
             placeholder="Email Address"
             name="email"
             value={email}
-            onChange={(field) => onChange(field)}
+            onChange={(event) => onChange(event)}
             required
           />
           <small className="form-text">
@@ -50,7 +60,7 @@ const Register = () => {
             name="password"
             minLength="6"
             value={password}
-            onChange={(field) => onChange(field)}
+            onChange={(event) => onChange(event)}
             required
           />
         </div>
@@ -61,7 +71,7 @@ const Register = () => {
             name="password2"
             minLength="6"
             value={password2}
-            onChange={(field) => onChange(field)}
+            onChange={(event) => onChange(event)}
             required
           />
         </div>
