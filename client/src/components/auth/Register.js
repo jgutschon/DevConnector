@@ -1,42 +1,72 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 
 const Register = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+    password2: '',
+  });
+
+  const { name, email, password, password2 } = formData;
+  const onChange = (field) =>
+    setFormData({ ...formData, [field.target.name]: field.target.value });
+
   return (
     <Fragment>
-      <h1 class="large text-primary">Sign Up</h1>
-      <p class="lead">
-        <i class="fas fa-user"></i> Create Your Account
+      <h1 className="large text-primary">Sign Up</h1>
+      <p className="lead">
+        <i className="fas fa-user"></i> Create Your Account
       </p>
-      <form class="form" action="create-profile.html">
-        <div class="form-group">
-          <input type="text" placeholder="Name" name="name" required />
+      <form className="form" action="create-profile.html">
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="Name"
+            name="name"
+            value={name}
+            onChange={(field) => onChange(field)}
+            required
+          />
         </div>
-        <div class="form-group">
-          <input type="email" placeholder="Email Address" name="email" />
-          <small class="form-text">
-            This site uses Gravatar so if you want a profile image, use a
-            Gravatar email
+        <div className="form-group">
+          <input
+            type="email"
+            placeholder="Email Address"
+            name="email"
+            value={email}
+            onChange={(field) => onChange(field)}
+            required
+          />
+          <small className="form-text">
+            Use a Gravatar email to automatically add a profile picture.
           </small>
         </div>
-        <div class="form-group">
+        <div className="form-group">
           <input
             type="password"
             placeholder="Password"
             name="password"
             minLength="6"
+            value={password}
+            onChange={(field) => onChange(field)}
+            required
           />
         </div>
-        <div class="form-group">
+        <div className="form-group">
           <input
             type="password"
             placeholder="Confirm Password"
             name="password2"
             minLength="6"
+            value={password2}
+            onChange={(field) => onChange(field)}
+            required
           />
         </div>
-        <input type="submit" class="btn btn-primary" value="Register" />
+        <input type="submit" className="btn btn-primary" value="Register" />
       </form>
-      <p class="my-1">
+      <p className="my-1">
         Already have an account? <a href="login.html">Sign In</a>
       </p>
     </Fragment>
