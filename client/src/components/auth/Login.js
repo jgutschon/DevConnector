@@ -8,7 +8,7 @@ const Login = () => {
     password: '',
   });
 
-  const { name, email, password } = formData;
+  const { email, password } = formData;
 
   const onChange = (event) =>
     setFormData({ ...formData, [event.target.name]: event.target.value });
